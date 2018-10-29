@@ -7,5 +7,17 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "simple-login": {
+      "tags": []
+    },
+    "simple-login-e2e": {
+      "tags": []
+    },
+    "auth": {
+      "tags": [
+        "auth"
+      ]
+    }
+  }
 }

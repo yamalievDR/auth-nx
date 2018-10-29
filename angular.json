@@ -2,7 +2,167 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "projects": {},
+  "projects": {
+    "simple-login": {
+      "root": "apps/simple-login/",
+      "sourceRoot": "apps/simple-login/src",
+      "projectType": "application",
+      "prefix": "auth-nx",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/simple-login",
+            "index": "apps/simple-login/src/index.html",
+            "main": "apps/simple-login/src/main.ts",
+            "polyfills": "apps/simple-login/src/polyfills.ts",
+            "tsConfig": "apps/simple-login/tsconfig.app.json",
+            "assets": [
+              "apps/simple-login/src/favicon.ico",
+              "apps/simple-login/src/assets"
+            ],
+            "styles": [
+              "apps/simple-login/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/simple-login/src/environments/environment.ts",
+                  "with": "apps/simple-login/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "simple-login:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "simple-login:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "simple-login:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/simple-login/src/test.ts",
+            "polyfills": "apps/simple-login/src/polyfills.ts",
+            "tsConfig": "apps/simple-login/tsconfig.spec.json",
+            "karmaConfig": "apps/simple-login/karma.conf.js",
+            "styles": [
+              "apps/simple-login/src/styles.scss"
+            ],
+            "scripts": [],
+            "assets": [
+              "apps/simple-login/src/favicon.ico",
+              "apps/simple-login/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/simple-login/tsconfig.app.json",
+              "apps/simple-login/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "simple-login-e2e": {
+      "root": "apps/simple-login-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/simple-login-e2e/protractor.conf.js",
+            "devServerTarget": "simple-login:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "simple-login:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/simple-login-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "auth": {
+      "root": "libs/auth",
+      "sourceRoot": "libs/auth/src",
+      "projectType": "library",
+      "prefix": "libs/auth-nx",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/auth/src/test.ts",
+            "tsConfig": "libs/auth/tsconfig.spec.json",
+            "karmaConfig": "libs/auth/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/auth/tsconfig.lib.json",
+              "libs/auth/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "warnings": {
       "typescriptMismatch": false,
@@ -10,5 +170,6 @@
     },
     "defaultCollection": "@nrwl/schematics",
     "packageManager": "npm"
-  }
+  },
+  "defaultProject": "simple-login"
 }
