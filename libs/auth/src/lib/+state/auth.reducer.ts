@@ -3,37 +3,40 @@ import { AuthActions, AuthActionTypes } from './auth.actions';
 
 export const AUTH_FEATURE_KEY = 'auth';
 
-/**
- * Interface for the 'Auth' data used in
- *  - AuthState, and
- *  - authReducer
- *
- *  Note: replace if already defined in another module
- */
-
-/* tslint:disable:no-empty-interface */
-export interface Entity {}
-
 export interface AuthState {
   user: UserModel | null;
-}
-
-export interface AuthPartialState {
-  readonly [AUTH_FEATURE_KEY]: AuthState;
+  error?: any;
+  isLoading?: boolean;
 }
 
 export const initialState: AuthState = {
-  user: null,
+  user: null
 };
 
-export function authReducer(
-  state: AuthState = initialState,
-  action: AuthActions
-): AuthState {
+export function authReducer(state: AuthState = initialState, action: AuthActions): AuthState {
   switch (action.type) {
+    case AuthActionTypes.Login: {
+      return {
+        ...state,
+        isLoading: true,
+        error: null
+      };
+    }
     case AuthActionTypes.LoginSuccess:
-      return { ...state, user: action.payload.user };
+      return {
+        ...state,
+        user: action.payload.user,
+        isLoading: false,
+        error: null
+      };
 
+    case AuthActionTypes.LoginFailure: {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload
+      };
+    }
     case AuthActionTypes.LogoutConfirmed:
       return initialState;
 

@@ -1,34 +1,55 @@
 import { Injectable } from '@angular/core';
-import { Effect, Actions } from '@ngrx/effects';
-import { DataPersistence } from '@nrwl/nx';
-import { LoginService } from '../login.service';
-
-import { AuthPartialState } from './auth.reducer';
-// import {
-//   LoadAuth,
-//   AuthLoaded,
-//   AuthLoadError,
-//   AuthActionTypes
-// } from './auth.actions';
+import { Router } from '@angular/router';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
+import {
+  AuthActionTypes,
+  Login,
+  LoginFailure,
+  LoginSuccess,
+  Logout,
+  LogoutComplete,
+  LogoutConfirmed
+} from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  // @Effect()
-  // loadAuth$ = this.dataPersistence.fetch(AuthActionTypes.LoadAuth, {
-  //   run: (action: LoadAuth, state: AuthPartialState) => {
-  //     // Your custom REST 'load' logic goes here. For now just return an empty list...
-  //     return new AuthLoaded([]);
-  //   },
-  //
-  //   onError: (action: LoadAuth, error) => {
-  //     console.error('Error', error);
-  //     return new AuthLoadError(error);
-  //   }
-  // });
+  @Effect()
+  login$ = this.actions$.pipe(
+    ofType(AuthActionTypes.Login),
+    map((auth: Login) => auth.payload),
+    switchMap(payload =>
+      this.authService.login(payload).pipe(
+        map(user => new LoginSuccess({ user })),
+        catchError(e => of(new LoginFailure(e)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  loginRedirect$ = this.actions$.pipe(
+    ofType<LoginSuccess>(AuthActionTypes.LoginSuccess),
+    tap(() => this.router.navigate(['/home']))
+  );
+
+  @Effect()
+  logoutConfirmation$ = this.actions$.pipe(
+    ofType<Logout>(AuthActionTypes.Logout),
+    switchMap(() => this.authService.logout().pipe(map(confirmed => new LogoutConfirmed())))
+  );
+
+  @Effect({ dispatch: false })
+  logout$ = this.actions$.pipe(
+    ofType(AuthActionTypes.LogoutConfirmed),
+    tap(() => this.router.navigate(['/login'])),
+    map(() => new LogoutComplete())
+  );
 
   constructor(
     private actions$: Actions,
-    private dataPersistence: DataPersistence<AuthPartialState>,
-    private authService: LoginService
+    private authService: AuthService,
+    private router: Router
   ) {}
 }

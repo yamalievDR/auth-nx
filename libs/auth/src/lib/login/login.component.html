@@ -1,7 +1,8 @@
 <form [formGroup]="loginForm">
-  <label>Login</label>
-  <input name="login" formControlName="login"/>
+  <label>Username</label>
+  <input name="username" formControlName="username"/>
   <label>Password</label>
   <input name="password" formControlName="password"/>
   <button (click)="login(loginForm)">Login</button>
 </form>
+<pre>{{error$ | async | json}}</pre>
