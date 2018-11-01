@@ -18,6 +18,9 @@
     "paths": {
       "@auth-nx/auth": [
         "libs/auth/src/index.ts"
+      ],
+      "@auth-nx/router": [
+        "libs/router/src/index.ts"
       ]
     }
   },

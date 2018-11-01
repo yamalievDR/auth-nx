@@ -161,6 +161,34 @@
           }
         }
       }
+    },
+    "router": {
+      "root": "libs/router",
+      "sourceRoot": "libs/router/src",
+      "projectType": "library",
+      "prefix": "auth-nx",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "libs/router/src/test.ts",
+            "tsConfig": "libs/router/tsconfig.spec.json",
+            "karmaConfig": "libs/router/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/router/tsconfig.lib.json",
+              "libs/router/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

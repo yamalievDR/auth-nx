@@ -18,6 +18,9 @@
       "tags": [
         "auth"
       ]
+    },
+    "router": {
+      "tags": []
     }
   }
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 import { AuthGuardService, AuthModule } from '@auth-nx/auth';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
@@ -14,23 +14,23 @@ import { appReducer, initialState as appInitialState } from './+state/app.reduce
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { RouterModule as CustomRouterModule } from '@auth-nx/router';
+
+const router: Route[] = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [AuthGuardService]
+  }
+];
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     NxModule.forRoot(),
-    RouterModule.forRoot(
-      [
-        { path: '', redirectTo: 'home', pathMatch: 'full' },
-        {
-          path: 'home',
-          component: HomeComponent,
-          canActivate: [AuthGuardService]
-        }
-      ],
-      { initialNavigation: 'enabled' }
-    ),
+    RouterModule.forRoot(router, { initialNavigation: 'enabled' }),
     StoreModule.forRoot(
       { app: appReducer },
       {
@@ -41,7 +41,8 @@ import { HomeComponent } from './home/home.component';
     EffectsModule.forRoot([AppEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     StoreRouterConnectingModule,
-    AuthModule
+    AuthModule,
+    CustomRouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
